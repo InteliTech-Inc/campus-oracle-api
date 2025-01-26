@@ -7,7 +7,6 @@ import AuthService from "../auth/auth.service";
 import { z } from "zod";
 import AvatarService from "../../shared/service/avatar";
 import ImageService from "../../shared/service/image";
-import { initialAddress } from "../../shared/entities/address";
 import CustomError from "../../shared/entities/custom_error";
 
 /**
@@ -29,10 +28,9 @@ export default class UserController {
         const { id } = req.user!;
 
         try {
-            const { name, phone, address } =
+            const { name, email, password } =
                 UserSchema.validateCreateUser(body);
             const photo = AvatarService.generateUrl(name);
-            const updatedAddress = { ...initialAddress, ...address };
 
             /**
              * [initialUser] is a constant that contains the default values for a user object.
@@ -42,9 +40,7 @@ export default class UserController {
                 ...initialUser,
                 id,
                 name,
-                phone,
                 photo,
-                address: [{ ...updatedAddress }],
             });
             return res.sendStatus(201);
         } catch (error) {
@@ -66,63 +62,6 @@ export default class UserController {
             res.status(200).json({ data: user });
         } catch (e) {
             return handleErrorResponse(e, res);
-        }
-    };
-
-    /**
-     * Updates the user row of an existing user
-     */
-    static updateUser = async function (
-        req: Request<
-            {
-                id: string;
-            },
-            {},
-            z.infer<typeof UserSchema.updateUser>
-        >,
-        res: Response
-    ) {
-        const {
-            body,
-            params: { id },
-        } = req;
-
-        try {
-            const validatedBody = UserSchema.validateUpdateUser({ ...body });
-            const user = await UserService.retrieve(id);
-
-            let updatedAddresses;
-
-            const address = validatedBody.address;
-
-            if (address) {
-                const existingAddress = user.address.find(
-                    (addr) => addr.id === address.id
-                );
-
-                if (existingAddress) {
-                    // Update existing address
-                    Object.assign(existingAddress, address);
-                } else {
-                    // Append new address
-                    user.address.push({ ...initialAddress, ...address });
-                }
-                updatedAddresses = user.address;
-            } else {
-                // Keep old addresses
-                updatedAddresses = user.address;
-            }
-
-            let updatedUserPayload: Partial<User> = {
-                ...validatedBody,
-                address: updatedAddresses,
-                updated_at: new Date(),
-            };
-
-            const data = await UserService.update(id, updatedUserPayload);
-            return res.status(200).json({ data });
-        } catch (error) {
-            return handleErrorResponse(error, res);
         }
     };
 
@@ -156,40 +95,6 @@ export default class UserController {
             res.sendStatus(201);
         } catch (e) {
             return handleErrorResponse(e, res);
-        }
-    };
-
-    /**
-     * Update a user's photo
-     * */
-
-    static updatePhoto = async function (
-        req: Request<{ id: string }>,
-        res: Response
-    ) {
-        const {
-            file,
-            params: { id },
-        } = req;
-
-        if (!file) {
-            const error = new CustomError(400, "Upload a file");
-            return res.status(error.statusCode).json(error.toJSON());
-        }
-
-        try {
-            const { photo } = UserSchema.validateUpdateUser({ photo: file });
-
-            const { fullPath } = await ImageService.upload(
-                photo,
-                ImageService.avatarFolder
-            );
-            const updatedUserPayload = { photo: fullPath };
-
-            await UserService.update(id, updatedUserPayload);
-            return res.sendStatus(201);
-        } catch (e) {
-            handleErrorResponse(e, res);
         }
     };
 }

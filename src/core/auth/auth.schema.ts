@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { otpRegex, phoneRegex } from "src/shared/constants/regex";
 
 // Schema for validating authentication related request bodies
 export class AuthSchema {
