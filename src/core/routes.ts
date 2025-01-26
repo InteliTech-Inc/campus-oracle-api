@@ -2,8 +2,7 @@ import express from "express";
 import { AuthRoutes } from "./auth/routes/auth.routes";
 import { UserRoutes } from "./user/routes/user.routes";
 import CustomError from "../shared/entities/custom_error";
-import { StationsRoutes } from "./station/routes/station.routes";
-import { VendorRoutes } from "./vendor/routes/vendor.routes";
+import { StoryRoutes } from "./story/routes/story.routes";
 
 const router = express.Router();
 
@@ -21,8 +20,7 @@ router.get("/", (req, res) => {
  * In depth explanation can be found in the README under special files.
  */
 router.use("/auth", AuthRoutes);
-router.use("/vendors", VendorRoutes);
-router.use("/stations", StationsRoutes);
+router.use("/stories", StoryRoutes);
 router.use("/users", UserRoutes);
 
 router.all("*", (req, res) => {

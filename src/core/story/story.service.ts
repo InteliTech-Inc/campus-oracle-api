@@ -1,26 +1,26 @@
 import { db } from "../../index";
 import { TABLES } from "../../shared/constants/tables";
 import CustomError from "../../shared/entities/custom_error";
-import Vendor from "./vendor.entities";
+import Story from "./story.entities";
 
-export default class VendorService {
+export default class StoryService {
     /**
-     * @param {Vendor} vendor - The object containing vendor details.
+     * @param {Story} story - The object containing story details.
      */
     static create = async (
-        vendor: Omit<Vendor, "created_at" | "updated_at">
+        story: Omit<Story, "created_at" | "updated_at" | "id">
     ): Promise<void> => {
-        const { error } = await db.from(TABLES.VENDORS).insert(vendor);
+        const { error } = await db.from(TABLES.STORIES).insert(story);
         if (error) {
             throw new CustomError(401, error.details || error.message);
         }
         return;
     };
 
-    static update = async (id: string, vendor: Partial<Vendor>) => {
+    static update = async (id: string, story: Partial<Story>) => {
         const { error } = await db
-            .from(TABLES.VENDORS)
-            .update(vendor)
+            .from(TABLES.STORIES)
+            .update(story)
             .eq("id", id);
         if (error) {
             throw new CustomError(401, error.details || error.message);
@@ -29,14 +29,14 @@ export default class VendorService {
     };
 
     /**
-     * retrieves a single vendor from the database.
+     * retrieves a single story from the database.
      *
-     * @param {string} id - The ID of the vendor whose details is to be retrieved.
+     * @param {string} id - The ID of the story whose details is to be retrieved.
      */
-    static retrieve = async (id: string): Promise<Vendor> => {
+    static retrieve = async (id: string): Promise<Story> => {
         const { data, error } = await db
-            .from(TABLES.VENDORS)
-            .select("*, users(*)")
+            .from(TABLES.STORIES)
+            .select("*, comments(*)")
             .eq("id", id)
             .single();
 
@@ -49,18 +49,18 @@ export default class VendorService {
          *  achieve this by processing the data after retrieval.
          * */
 
-        const { users, ...vendorFields } = data;
-        // Merge user fields with vendor fields to fit the vendor entity
-        return { ...users, ...vendorFields };
+        const { comments, ...storyFields } = data;
+        // Merge user fields with story fields to fit the story entity
+        return { ...comments, ...storyFields };
     };
 
     /**
-     * retrieves all vendors from the database.
+     * retrieves all stories from the database.
      */
-    static list = async (): Promise<Vendor[]> => {
+    static list = async (): Promise<Story[]> => {
         const { data, error } = await db
-            .from(TABLES.VENDORS)
-            .select("*, users(*)");
+            .from(TABLES.STORIES)
+            .select("*, comments(*)");
 
         if (error) {
             throw new CustomError(404, error.details || error.message);
@@ -72,10 +72,10 @@ export default class VendorService {
          * */
 
         return data
-            .map((vendor) => ({
-                ...vendor,
-                ...vendor.users, // Merge fields from the users table
+            .map((story) => ({
+                ...story,
+                ...story.comments, // Merge fields from the comments table
             }))
-            .map(({ users, ...rest }) => rest); // Remove the nested users object
+            .map(({ comments, ...rest }) => rest); // Remove the nested comments object
     };
 }

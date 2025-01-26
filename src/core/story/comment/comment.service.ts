@@ -1,15 +1,14 @@
-import User from "src/core/user/user.entities";
 import { db } from "src";
 import { TABLES } from "src/shared/constants/tables";
 import CustomError from "src/shared/entities/custom_error";
-import Application from "./application.entities";
+import { Comment } from "./comment.entities";
 
-export default class VendorApplicationService {
-    static list = async (): Promise<Application[]> => {
+export default class CommentService {
+    static listByStoryId = async (id: number): Promise<Comment[]> => {
         const { data, error } = await db
-            .from(TABLES.APPLICATIONS)
+            .from(TABLES.COMMENTS)
             .select("*")
-            .eq("user_role", "vendor");
+            .eq("story_id", id);
         if (error) {
             throw new CustomError(400, error.details || error.message);
         }
@@ -18,24 +17,22 @@ export default class VendorApplicationService {
     };
 
     /**
-     * @param {Application} application - The object containing user (rider or vendor) application
+     * @param {Comment} comment - The object containing the comment
      * to be created.
      */
     static create = async (
-        application: Omit<Application, "id" | "created_at" | "updated_at">
+        comment: Omit<Comment, "id" | "created_at" | "updated_at">
     ): Promise<void> => {
-        const { error } = await db
-            .from(TABLES.APPLICATIONS)
-            .insert(application);
+        const { error } = await db.from(TABLES.COMMENTS).insert(comment);
         if (error) {
             throw new CustomError(400, error.details || error.message);
         }
         return;
     };
 
-    static retrieve = async (id: string): Promise<Application> => {
+    static retrieve = async (id: string): Promise<Comment> => {
         const { data, error } = await db
-            .from(TABLES.APPLICATIONS)
+            .from(TABLES.COMMENTS)
             .select("*")
             .eq("id", id)
             .single();
@@ -49,11 +46,11 @@ export default class VendorApplicationService {
 
     static update = async (
         id: string,
-        application: Partial<Application>
+        comment: Partial<Comment>
     ): Promise<void> => {
         const { error } = await db
-            .from(TABLES.APPLICATIONS)
-            .update(application)
+            .from(TABLES.COMMENTS)
+            .update(comment)
             .eq("id", id);
 
         if (error) {
@@ -64,10 +61,7 @@ export default class VendorApplicationService {
     };
 
     static delete = async (id: string): Promise<void> => {
-        const { error } = await db
-            .from(TABLES.APPLICATIONS)
-            .delete()
-            .eq("id", id);
+        const { error } = await db.from(TABLES.COMMENTS).delete().eq("id", id);
 
         if (error) {
             throw new CustomError(404, error.details || error.message);

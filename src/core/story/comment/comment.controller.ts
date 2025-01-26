@@ -1,20 +1,10 @@
 import { Request, Response } from "express";
-import ApplicationService from "./application.service";
 import handleErrorResponse from "src/shared/utils/error";
-import ApplicationSchema from "./application.schema";
+import CommentSchema from "./comment.schema";
+import CommentService from "./comment.service";
 
 export default class VendorApplicationController {
-    static listApplications = async (req: Request, res: Response) => {
-        try {
-            const applications = await ApplicationService.list();
-
-            return res.status(200).json({ data: applications });
-        } catch (e) {
-            return handleErrorResponse(e, res);
-        }
-    };
-
-    static updateApplication = async (
+    static updateComment = async (
         req: Request<{ id: string }>,
         res: Response
     ) => {
@@ -24,10 +14,9 @@ export default class VendorApplicationController {
         } = req;
 
         try {
-            const validatedBody =
-                ApplicationSchema.validateUpdateApplication(body);
+            const validatedBody = CommentSchema.validateUpdateComment(body);
 
-            await ApplicationService.update(id, validatedBody);
+            await CommentService.update(id, validatedBody);
 
             return res.sendStatus(201);
         } catch (e) {
@@ -35,7 +24,7 @@ export default class VendorApplicationController {
         }
     };
 
-    static retrieveApplication = async (
+    static retrieveComment = async (
         req: Request<{ id: string }>,
         res: Response
     ) => {
@@ -44,15 +33,15 @@ export default class VendorApplicationController {
         } = req;
 
         try {
-            const application = await ApplicationService.retrieve(id);
+            const comment = await CommentService.retrieve(id);
 
-            return res.status(200).json(application);
+            return res.status(200).json(comment);
         } catch (e) {
             return handleErrorResponse(e, res);
         }
     };
 
-    static deleteApplication = async (
+    static deleteComment = async (
         req: Request<{ id: string }>,
         res: Response
     ) => {
@@ -61,7 +50,7 @@ export default class VendorApplicationController {
         } = req;
 
         try {
-            await ApplicationService.delete(id);
+            await CommentService.delete(id);
 
             return res.sendStatus(201);
         } catch (e) {
