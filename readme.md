@@ -166,12 +166,10 @@ We have two special route files, the file locations are `src/core/routes.ts` and
 // src/core/routes.ts
 import express from 'express'
 import { UserRoutes } from 'src/core/user/routes/user.routes.ts'
-import { RiderRoutes } from 'src/core/rider/routes/rider.routes.ts'
 
 const router = express.Router();
 
 router.use('/user', UserRoutes);
-router.use('/rider', RiderRoutes)
 
 export { router as ROUTES }
 
