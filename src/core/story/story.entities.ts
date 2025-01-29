@@ -5,6 +5,7 @@ type StoryUser = {
     email: string;
     phone: string;
     campus: string;
+    story_id: number;
 };
 
 type Story = {
@@ -20,10 +21,12 @@ type Story = {
     updated_at: Date;
 };
 
-export const initialStory: Omit<Story, "created_at" | "updated_at" | "id"> = {
+export const initialStory: Omit<
+    Story,
+    "created_at" | "updated_at" | "id" | "comments"
+> = {
     category: "",
     isVerified: false,
-    comments: [],
     content: "",
     sharing_type: "admin",
     likes: 0,

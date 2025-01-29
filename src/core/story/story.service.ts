@@ -8,11 +8,11 @@ export default class StoryService {
      * @param {Story} story - The object containing story details.
      */
     static create = async (
-        story: Omit<Story, "created_at" | "updated_at" | "id">
+        story: Omit<Story, "created_at" | "updated_at" | "id" | "comments">
     ): Promise<void> => {
         const { error } = await db.from(TABLES.STORIES).insert(story);
         if (error) {
-            throw new CustomError(401, error.details || error.message);
+            throw new CustomError(400, error.details || error.message);
         }
         return;
     };
@@ -23,7 +23,7 @@ export default class StoryService {
             .update(story)
             .eq("id", id);
         if (error) {
-            throw new CustomError(401, error.details || error.message);
+            throw new CustomError(400, error.details || error.message);
         }
         return;
     };
@@ -71,11 +71,6 @@ export default class StoryService {
          *  achieve this by processing the data after retrieval.
          * */
 
-        return data
-            .map((story) => ({
-                ...story,
-                ...story.comments, // Merge fields from the comments table
-            }))
-            .map(({ comments, ...rest }) => rest); // Remove the nested comments object
+        return data;
     };
 }

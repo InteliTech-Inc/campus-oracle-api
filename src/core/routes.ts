@@ -3,6 +3,7 @@ import { AuthRoutes } from "./auth/routes/auth.routes";
 import { UserRoutes } from "./user/routes/user.routes";
 import CustomError from "../shared/entities/custom_error";
 import { StoryRoutes } from "./story/routes/story.routes";
+import { CommentRoutes } from "./story/comment/routes/comment.routes";
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.get("/", (req, res) => {
  */
 router.use("/auth", AuthRoutes);
 router.use("/stories", StoryRoutes);
+router.use("/comments", CommentRoutes);
 router.use("/users", UserRoutes);
 
 router.all("*", (req, res) => {

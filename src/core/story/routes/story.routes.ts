@@ -10,20 +10,18 @@ const router = express.Router();
 router.post("/", StoryController.createStory);
 
 // retrieves a single story
-router.get("/:id", RegexMiddleware.parseUUID, StoryController.retrieveStory);
+router.get("/:id", RegexMiddleware.parseInteger, StoryController.retrieveStory);
 
 // update an existing story
 router.patch(
     "/:id",
     /// Makes sure [:id] is a valid UUID
-    RegexMiddleware.parseUUID,
+    RegexMiddleware.parseInteger,
     AuthMiddleware.authorise,
     StoryController.updateStory
 );
 
 // fetch all stories
 router.get("/", StoryController.listStories);
-
-router.use("/comments", CommentRoutes);
 
 export { router as StoryRoutes };

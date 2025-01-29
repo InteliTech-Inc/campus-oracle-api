@@ -5,12 +5,12 @@ import RegexMiddleware from "src/shared/middleware/regex";
 
 const router = express.Router();
 
-// fetch all comments
-router.get(
-    "/",
-    AuthMiddleware.authorise
-    // CommentController.li
-);
+// fetch all comments by story_id
+router.get("/", CommentController.listComments);
+
+// create a comment
+
+router.post("/", CommentController.createComment);
 
 // retrieves a single comment
 router.get(

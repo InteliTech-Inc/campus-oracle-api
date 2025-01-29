@@ -2,8 +2,36 @@ import { Request, Response } from "express";
 import handleErrorResponse from "src/shared/utils/error";
 import CommentSchema from "./comment.schema";
 import CommentService from "./comment.service";
+import { z } from "zod";
 
 export default class VendorApplicationController {
+    static createComment = async (
+        req: Request<{}, {}, z.infer<typeof CommentSchema.create>>,
+        res: Response
+    ) => {
+        const { body } = req;
+
+        try {
+            const validatedObj = CommentSchema.validateCreateComment(body);
+            await CommentService.create(validatedObj);
+            return res.sendStatus(201);
+        } catch (e) {
+            return handleErrorResponse(e, res);
+        }
+    };
+
+    static listComments = async (
+        req: Request<{}, {}, { story_id: number }>,
+        res: Response
+    ) => {
+        const { body } = req;
+
+        try {
+            const { story_id: id } = CommentSchema.validateListByStoryId(body);
+            const comments = await CommentService.listByStoryId(id);
+            return res.status(200).json({ data: comments });
+        } catch (error) {}
+    };
     static updateComment = async (
         req: Request<{ id: string }>,
         res: Response
