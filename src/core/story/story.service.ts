@@ -9,12 +9,15 @@ export default class StoryService {
      */
     static create = async (
         story: Omit<Story, "created_at" | "updated_at" | "id" | "comments">
-    ): Promise<void> => {
-        const { error } = await db.from(TABLES.STORIES).insert(story);
+    ): Promise<Story> => {
+        const { data, error } = await db
+            .from(TABLES.STORIES)
+            .upsert(story)
+            .select();
         if (error) {
             throw new CustomError(400, error.details || error.message);
         }
-        return;
+        return data[0] as Story;
     };
 
     static update = async (id: string, story: Partial<Story>) => {

@@ -4,6 +4,7 @@ import handleErrorResponse from "../../shared/utils/error";
 import StorySchema from "./story.schema";
 import { initialStory } from "./story.entities";
 import StoryService from "./story.service";
+import UserService from "../user/user.service";
 export default class StoryController {
     /**
      * Creates a new story
@@ -15,12 +16,19 @@ export default class StoryController {
         const { body } = req;
 
         try {
-            const validatedObj = StorySchema.validateCreateStory(body);
+            const { user, ...rest } = StorySchema.validateCreateStory(body);
 
-            await StoryService.create({
+            const story = await StoryService.create({
                 ...initialStory,
-                ...validatedObj,
+                ...rest,
             });
+
+            if (user) {
+                await UserService.create({
+                    ...user,
+                    story_id: story.id,
+                });
+            }
 
             return res.sendStatus(201);
         } catch (error) {

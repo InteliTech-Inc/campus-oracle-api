@@ -1,8 +1,8 @@
 import CustomError from "../../shared/entities/custom_error";
-import {db} from "src/index";
+import { db } from "src/index";
 import User from "./user.entities";
 import * as process from "node:process";
-import {TABLES} from "../../shared/constants/tables";
+import { TABLES } from "../../shared/constants/tables";
 import * as console from "node:console";
 
 /**
@@ -13,9 +13,9 @@ export default class UserService {
      * @param {User} user - The user object containing profile details to be created.
      */
     static create = async (
-        user: Omit<User, "created_at" | "updated_at">,
+        user: Omit<User, "created_at" | "updated_at" | "id">
     ): Promise<void> => {
-        const {error} = await db.from(TABLES.USERS).insert(user);
+        const { error } = await db.from(TABLES.USERS).insert(user);
         if (error) {
             throw new CustomError(401, error.details || error.message);
         }
@@ -28,7 +28,7 @@ export default class UserService {
      * @param {string} id - The ID of the user whose details is to be retrieved.
      */
     static retrieve = async (id: string): Promise<User> => {
-        const {data, error} = await db
+        const { data, error } = await db
             .from(TABLES.USERS)
             .select("*")
             .eq("id", id)
@@ -47,11 +47,11 @@ export default class UserService {
      */
     public static update = async (
         id: string,
-        userInfo: Partial<User>,
+        userInfo: Partial<User>
     ): Promise<User> => {
-        const {data, error} = await db
+        const { data, error } = await db
             .from(TABLES.USERS)
-            .update({...userInfo})
+            .update({ ...userInfo })
             .eq("id", id)
             .select()
             .single();
@@ -71,7 +71,7 @@ export default class UserService {
      * retrieves all users from the database.
      */
     static list = async (): Promise<User[]> => {
-        const {data, error} = await db.from(TABLES.USERS).select("*");
+        const { data, error } = await db.from(TABLES.USERS).select("*");
         if (error) {
             throw new CustomError(404, error.details || error.message);
         }
@@ -94,7 +94,7 @@ export default class UserService {
                         "Content-Type": "application/json",
                         apikey: `${process.env.SUPABASE_ANON_KEY}`,
                     },
-                },
+                }
             );
 
             if (!response.ok) {

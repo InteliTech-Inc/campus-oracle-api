@@ -15,6 +15,11 @@ export type User = {
     // The email address of the user.
     email: string;
 
+    campus: string;
+
+    //
+    story_id: number;
+
     // The date and time the user record was created.
     created_at: Date;
 
@@ -22,12 +27,14 @@ export type User = {
     updated_at: Date;
 };
 
-export const initialUser: Omit<User, "created_at" | "updated_at"> = {
-    id: "",
-    name: "",
-    phone: "",
-    photo: "",
-    email: "",
-};
+export const initialUser: Omit<User, "created_at" | "updated_at" | "story_id"> =
+    {
+        id: "",
+        name: "",
+        phone: "",
+        photo: "",
+        email: "",
+        campus: "",
+    };
 
 export default User;
