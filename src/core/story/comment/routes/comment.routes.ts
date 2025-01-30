@@ -6,7 +6,7 @@ import RegexMiddleware from "src/shared/middleware/regex";
 const router = express.Router();
 
 // fetch all comments by story_id
-router.post("/", CommentController.listComments);
+router.get("", CommentController.listComments);
 
 // create a comment
 

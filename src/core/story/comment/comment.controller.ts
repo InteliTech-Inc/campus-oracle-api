@@ -3,6 +3,7 @@ import handleErrorResponse from "src/shared/utils/error";
 import CommentSchema from "./comment.schema";
 import CommentService from "./comment.service";
 import { z } from "zod";
+import CustomError from "src/shared/entities/custom_error";
 
 export default class VendorApplicationController {
     static createComment = async (
@@ -25,10 +26,18 @@ export default class VendorApplicationController {
         res: Response
     ) => {
         const { body } = req;
+        const search = new URLSearchParams(req.url);
+
+        const id = search.get("/?story_id");
+
+        if (!id) {
+            const error = new CustomError(400, "Missing search param story_id");
+            return handleErrorResponse(error, res);
+        }
 
         try {
-            const { story_id: id } = CommentSchema.validateListByStoryId(body);
-            const comments = await CommentService.listByStoryId(id);
+            const identifier = parseInt(id);
+            const comments = await CommentService.listByStoryId(identifier);
             return res.status(200).json({ data: comments });
         } catch (error) {
             return handleErrorResponse(error, res);
