@@ -30,7 +30,9 @@ export default class VendorApplicationController {
             const { story_id: id } = CommentSchema.validateListByStoryId(body);
             const comments = await CommentService.listByStoryId(id);
             return res.status(200).json({ data: comments });
-        } catch (error) {}
+        } catch (error) {
+            return handleErrorResponse(error, res);
+        }
     };
     static updateComment = async (
         req: Request<{ id: string }>,

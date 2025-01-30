@@ -49,9 +49,8 @@ export default class StoryService {
          *  achieve this by processing the data after retrieval.
          * */
 
-        const { comments, ...storyFields } = data;
         // Merge user fields with story fields to fit the story entity
-        return { ...comments, ...storyFields };
+        return data;
     };
 
     /**
