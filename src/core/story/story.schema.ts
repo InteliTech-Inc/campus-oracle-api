@@ -14,7 +14,6 @@ export default class StorySchema {
                 email: z.string().trim().email(),
                 phone: z.string().regex(phoneRegex),
                 campus: z.string().trim(),
-                story_id: z.number(),
             })
             .optional(),
         isVerified: z.boolean().optional(),

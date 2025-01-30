@@ -5,7 +5,7 @@ type StoryUser = {
     email: string;
     phone: string;
     campus: string;
-    story_id: number;
+    story_id?: number;
 };
 
 type Story = {

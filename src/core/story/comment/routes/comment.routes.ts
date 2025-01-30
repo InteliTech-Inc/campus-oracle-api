@@ -16,7 +16,6 @@ router.post("/", CommentController.createComment);
 router.get(
     "/:id",
     RegexMiddleware.parseInteger,
-    AuthMiddleware.authorise,
     CommentController.retrieveComment
 );
 
@@ -24,7 +23,6 @@ router.get(
 router.patch(
     "/:id",
     RegexMiddleware.parseInteger,
-    AuthMiddleware.authorise,
     CommentController.updateComment
 );
 
@@ -32,7 +30,6 @@ router.patch(
 router.delete(
     "/:id",
     RegexMiddleware.parseInteger,
-    AuthMiddleware.authorise,
     CommentController.deleteComment
 );
 
