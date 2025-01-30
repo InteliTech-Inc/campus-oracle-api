@@ -17,7 +17,6 @@ router.patch(
     "/:id",
     /// Makes sure [:id] is a valid UUID
     RegexMiddleware.parseInteger,
-    AuthMiddleware.authorise,
     StoryController.updateStory
 );
 
