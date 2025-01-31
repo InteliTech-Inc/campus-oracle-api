@@ -39,7 +39,7 @@ export default class StoryService {
     static retrieve = async (id: string): Promise<Story> => {
         const { data, error } = await db
             .from(TABLES.STORIES)
-            .select("*, comments(*)")
+            .select("*, comments(*), users(*)")
             .eq("id", id)
             .single();
 
