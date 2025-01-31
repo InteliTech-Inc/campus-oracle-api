@@ -62,7 +62,7 @@ export default class StoryService {
     static list = async (): Promise<Story[]> => {
         const { data, error } = await db
             .from(TABLES.STORIES)
-            .select("*, comments(*)");
+            .select("*, comments(*), users(*)");
 
         if (error) {
             throw new CustomError(404, error.details || error.message);
