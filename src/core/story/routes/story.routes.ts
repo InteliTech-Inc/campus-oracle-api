@@ -23,4 +23,11 @@ router.patch(
 // fetch all stories
 router.get("/", StoryController.listStories);
 
+// delete story
+router.delete(
+    "/:id",
+    RegexMiddleware.parseInteger,
+    StoryController.deleteStory
+);
+
 export { router as StoryRoutes };

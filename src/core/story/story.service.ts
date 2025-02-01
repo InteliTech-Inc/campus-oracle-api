@@ -68,11 +68,16 @@ export default class StoryService {
             throw new CustomError(404, error.details || error.message);
         }
 
-        /*
-         * Supabase doesn't directly merge fields from related tables into a flat structure, so we
-         *  achieve this by processing the data after retrieval.
-         * */
-
         return data;
+    };
+
+    static delete = async (id: string): Promise<void> => {
+        const { error } = await db.from(TABLES.STORIES).delete().eq("id", id);
+
+        if (error) {
+            throw new CustomError(404, error.details || error.message);
+        }
+
+        return;
     };
 }

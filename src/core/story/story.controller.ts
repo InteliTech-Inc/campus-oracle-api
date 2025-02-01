@@ -92,4 +92,21 @@ export default class StoryController {
             handleErrorResponse(e, res);
         }
     };
+    /*
+     * Delete a story
+     * */
+    static deleteStory = async (
+        req: Request<{ id: string }>,
+        res: Response
+    ) => {
+        try {
+            const {
+                params: { id },
+            } = req;
+            await StoryService.delete(id);
+            return res.sendStatus(201);
+        } catch (e) {
+            handleErrorResponse(e, res);
+        }
+    };
 }
