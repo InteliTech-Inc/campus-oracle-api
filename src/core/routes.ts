@@ -11,7 +11,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
     return res.status(200).json({
         version: "1.0.0",
-        message: "Welcome to Oneway API",
+        message: "Welcome to Campus Oracle API",
     });
 });
 

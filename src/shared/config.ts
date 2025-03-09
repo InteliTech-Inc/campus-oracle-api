@@ -37,13 +37,13 @@ export default class Config {
             definition: {
                 openapi: "3.0.0",
                 info: {
-                    title: "ONEWAY API",
+                    title: "campus oracle API",
                     version: "1.0.0",
                     description:
-                        "API documentation for the ONEWAY application.",
+                        "API documentation for the campus oracle application.",
                     contact: {
-                        name: "Oneway Team",
-                        email: "oneway@gmail.com",
+                        name: "campus oracle Team",
+                        email: "campusoracleghana@gmail.com",
                     },
                 },
                 servers: [
